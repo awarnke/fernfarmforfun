@@ -2,7 +2,6 @@
 
 use crate::animation_renderer::animation_renderer::AnimationRenderer;
 use std::fs::File;
-use std::path::PathBuf;
 use std::io::Write;
 
 /// Defines a vector renderer
@@ -24,9 +23,9 @@ impl<'my_lifespan> SvgWriter {
     /// This function panics if the vector graphics cannot be written to a file.
     ///
     pub fn new(file_name: &str) -> SvgWriter {
-        let mut file_to_use = PathBuf::from(file_name);
-        file_to_use.push(file_name);
-        SvgWriter{ output_file: File::create(&file_to_use).unwrap() }
+        SvgWriter {
+            output_file: File::create(file_name).unwrap(),
+        }
     }
 
     /// The function header converts the vector graphics drawing directive header to svg format
@@ -72,6 +71,18 @@ impl<'my_lifespan> SvgWriter {
 
 /// The VecRenderer struct provides some methods that implement a PathRenderer
 impl<'my_lifespan> AnimationRenderer<'my_lifespan> for SvgWriter {
+    /// This function starts to define an animation path, it writes the header.
+    ///
+    fn start(self: &mut Self) -> () {
+        self.header();
+    }
+
+    /// This function ends an animation path, it writes the footer.
+    ///
+    fn end(self: &mut Self) -> () {
+        self.footer();
+    }
+
     /// The function define_animation_path defines an animation path
     ///
     /// # Arguments
@@ -83,11 +94,7 @@ impl<'my_lifespan> AnimationRenderer<'my_lifespan> for SvgWriter {
     ///
     /// This function panics if the vector graphics cannot be written to a file.
     ///
-    fn define_animation_path(
-        self: &mut Self,
-        _x: f32,
-        _y: f32
-    ) -> () {
+    fn define_animation_path(self: &mut Self, _x: f32, _y: f32) -> () {
         write!(self.output_file, "    <path").expect("Error at writing file");
         write!(self.output_file, " stroke=\"none\"").expect("Error at writing file");
         write!(self.output_file, "\"\n    />\n").expect("Error at writing file");

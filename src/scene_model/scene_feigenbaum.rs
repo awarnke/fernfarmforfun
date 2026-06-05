@@ -9,11 +9,13 @@ use crate::animation_renderer::animation_renderer::AnimationRenderer;
 /// # Arguments
 ///
 ///
-fn render_animation( _anim_out: &dyn AnimationRenderer ) -> () {
+pub fn render_animation(anim_out: &mut dyn AnimationRenderer) -> () {
     let _take: f32 = 1.0;
     let _rest: f32 = 1.0;
     let _one_third: f32 = 1.0 / 3.0;
     let _two_thirds: f32 = 2.0 / 3.0;
+    anim_out.start();
+    anim_out.end();
 }
 
 /*

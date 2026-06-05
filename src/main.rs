@@ -5,6 +5,7 @@
 pub mod animation_renderer;
 pub mod scene_model;
 use animation_renderer::animation_svg_writer;
+use scene_model::scene_feigenbaum;
 use std::env;
 
 /// The main function defines parameters and starts the icon_writer.
@@ -14,7 +15,9 @@ fn main() {
     for argument in args {
         let arg = argument.as_str();
         if arg == "-f" {
-            let _svg_writer: animation_svg_writer::SvgWriter = animation_svg_writer::SvgWriter::new("feigenbaum.svg");
+            let mut svg_writer: animation_svg_writer::SvgWriter =
+                animation_svg_writer::SvgWriter::new("feigenbaum.svg");
+            scene_feigenbaum::render_animation(&mut svg_writer);
             println!("Generated files have been written to '{}'.", ".");
         }
 

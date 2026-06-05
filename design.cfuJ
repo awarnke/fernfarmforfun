@@ -1,0 +1,194 @@
+{
+  "head": {
+    "encoding": "utf-8",
+    "structure_format": "rfc-8259 w/o hexadecimal escapes",
+    "format": "cfu-json",
+    "major_version": 1,
+    "minor_version": 3,
+    "generator_name": "crystal-facet-uml",
+    "generator_version": "1.70.5"
+  }
+  ,
+  "views":
+  [
+    {
+      "diagram": {
+        "id": 1,
+        "type": "Component Diagram", "diagram_type": 31,
+        "name": "Modules",
+        "description": [
+                ""
+        ],
+        "list_order": 0,
+        "uuid": "a7b41f08-692d-48f9-a820-63e993118011",
+        "diagramelements":
+        [
+          {
+            "id": 1,
+            "classifier_name": "scene_model",
+            "node": "5c819f27-7250-47b3-bf14-24356fe91373",
+            "uuid": "44b783cc-7af8-4ca6-a7e2-d31c2fee5e84"
+          },
+          {
+            "id": 2,
+            "classifier_name": "animaion_renderer",
+            "node": "0cffab0a-3fc5-4b39-9709-83b782cab633",
+            "uuid": "46847e68-bffe-4764-a63e-a84cdd9df0df"
+          },
+          {
+            "id": 3,
+            "classifier_name": "main",
+            "node": "2e8164ab-c0d1-43df-9a6b-bd930dba20e4",
+            "uuid": "492e1d3d-c0c5-4fbd-953c-86d2360baf7e"
+          }
+        ]
+      }
+    }
+  ]
+  ,
+  "nodes":
+  [
+    {
+      "classifier": {
+        "id": 1,
+        "type": "Component", "main_type": 121,
+        "name": "scene_model",
+        "description": [
+                ""
+        ],
+        "x_order": -1362455350,
+        "y_order": -902241713,
+        "list_order": -902241713,
+        "uuid": "5c819f27-7250-47b3-bf14-24356fe91373",
+        "features":
+        [
+        ]
+      }
+    },
+    {
+      "classifier": {
+        "id": 2,
+        "type": "Component", "main_type": 121,
+        "name": "animaion_renderer",
+        "description": [
+                ""
+        ],
+        "x_order": 836092384,
+        "y_order": -1090831047,
+        "list_order": -1090831047,
+        "uuid": "0cffab0a-3fc5-4b39-9709-83b782cab633",
+        "features":
+        [
+          {
+            "id": 1,
+            "type": "Port", "main_type": 2,
+            "key": "render",
+            "description": [
+                ""
+            ],
+            "list_order": 574563540,
+            "uuid": "f756b493-2436-4c78-96c5-584cb726e6a8"
+          },
+          {
+            "id": 2,
+            "type": "Provided Interface", "main_type": 4,
+            "key": "render animation",
+            "description": [
+                ""
+            ],
+            "list_order": 924192306,
+            "uuid": "0dd21a10-965a-489b-89ab-35963cd0cadc"
+          }
+        ]
+      }
+    },
+    {
+      "classifier": {
+        "id": 3,
+        "type": "Class", "main_type": 125,
+        "name": "main",
+        "description": [
+                ""
+        ],
+        "x_order": -1416291771,
+        "y_order": -1181097400,
+        "list_order": -1181097400,
+        "uuid": "2e8164ab-c0d1-43df-9a6b-bd930dba20e4",
+        "features":
+        [
+        ]
+      }
+    }
+  ]
+  ,
+  "edges":
+  [
+    {
+      "relationship": {
+        "id": 2,
+        "type": "Association", "main_type": 200,
+        "name": "call",
+        "description": [
+                ""
+        ],
+        "list_order": 65536,
+        "from_classifier_name": "scene_model",
+        "from_node": "5c819f27-7250-47b3-bf14-24356fe91373",
+        "to_classifier_name": "animaion_renderer",
+        "to_feature_key": "render animation",
+        "to_node": "0dd21a10-965a-489b-89ab-35963cd0cadc",
+        "uuid": "2e363170-9fc8-45bf-a787-43c7fa31e9ec"
+      }
+    },
+    {
+      "relationship": {
+        "id": 1,
+        "type": "Communication Path", "main_type": 230,
+        "name": "",
+        "description": [
+                ""
+        ],
+        "list_order": 32768,
+        "from_classifier_name": "animaion_renderer",
+        "from_feature_key": "render animation",
+        "from_node": "0dd21a10-965a-489b-89ab-35963cd0cadc",
+        "to_classifier_name": "animaion_renderer",
+        "to_feature_key": "render",
+        "to_node": "f756b493-2436-4c78-96c5-584cb726e6a8",
+        "uuid": "2eed726e-4ba1-4d04-8446-30137acbd6ca"
+      }
+    },
+    {
+      "relationship": {
+        "id": 3,
+        "type": "Association", "main_type": 200,
+        "name": "create",
+        "description": [
+                ""
+        ],
+        "list_order": 98304,
+        "from_classifier_name": "main",
+        "from_node": "2e8164ab-c0d1-43df-9a6b-bd930dba20e4",
+        "to_classifier_name": "animaion_renderer",
+        "to_node": "0cffab0a-3fc5-4b39-9709-83b782cab633",
+        "uuid": "11322453-1e00-4d76-b3db-3fe6ef6b5ccb"
+      }
+    },
+    {
+      "relationship": {
+        "id": 4,
+        "type": "Association", "main_type": 200,
+        "name": "simulate",
+        "description": [
+                ""
+        ],
+        "list_order": 131072,
+        "from_classifier_name": "main",
+        "from_node": "2e8164ab-c0d1-43df-9a6b-bd930dba20e4",
+        "to_classifier_name": "scene_model",
+        "to_node": "5c819f27-7250-47b3-bf14-24356fe91373",
+        "uuid": "8ced446e-020e-4051-a38a-761c03f54072"
+      }
+    }
+  ]
+}

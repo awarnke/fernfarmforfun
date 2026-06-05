@@ -1,6 +1,5 @@
 //! The module provides functions to render an animation.
 
-
 /// Defines the data needed to render an icon
 ///
 /// # Lifetimes
@@ -8,18 +7,21 @@
 /// * `'my_lifespan` refers to the lifetime of `AnimationRenderer`
 ///
 pub trait AnimationRenderer<'my_lifespan> {
+    /// This function starts to define an animation path, it writes the header.
+    ///
+    fn start(self: &mut Self) -> ();
+
+    /// This function ends an animation path, it writes the footer.
+    ///
+    fn end(self: &mut Self) -> ();
+
     /// This function defines an animation path.
     ///
     /// # Arguments
     ///
     /// * `x` - x coordinate
     /// * `y` - y coordinate
-    fn define_animation_path(
-        self: &mut Self,
-        x: f32,
-        y: f32
-    ) -> ();
-
+    fn define_animation_path(self: &mut Self, x: f32, y: f32) -> ();
 }
 
 /*
