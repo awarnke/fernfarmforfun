@@ -11,6 +11,25 @@ use crate::geometry::path::Rect;
 ///
 /// # Arguments
 ///
+/// * `anim_out` - the writer that converts the animated scene to svg
+///
+fn feigenbaum(iter_max:i32,system_param: f32) -> f32 {
+    let precise_b: f64 = system_param as f64;
+    let mut iter_value: f64 = 0.5_f64;
+    for _i in 1..iter_max
+    {
+        iter_value = precise_b * iter_value * ( 1.0_f64 - iter_value );
+    }
+    iter_value as f32
+}
+
+/// The function defines the draw directives for the reflections per facet
+///
+/// The first edge is completely covered by the result polygon
+///
+/// # Arguments
+///
+/// * `anim_out` - the writer that converts the animated scene to svg
 ///
 pub fn render_animation(anim_out: &mut dyn AnimationRenderer) -> () {
     let _take: f32 = 1.0;
@@ -24,21 +43,26 @@ pub fn render_animation(anim_out: &mut dyn AnimationRenderer) -> () {
         width: 800.0,
         height: 600.0,
     });
-    for b in 0..7
+    for b in 0..8
     {
         let mut path: [DrawDirective; 401] = [DrawDirective::Move(Point { x: 0.0, y: 600.0 });401];
         for i in 0..400
         {
             let x_param = i as f32;
-            path[1+i] = DrawDirective::Line(Point { x: 2.0*x_param, y: 600.0-20.0*((x_param)%5.0) });
+            let f = feigenbaum(1+b,x_param/100.0);
+            path[1+i] = DrawDirective::Line(Point { x: 2.0*x_param, y: 600.0-600.0*f });
         }
         anim_out.begin_morph(&path);
-        for i in 0..400
+        for depth in 1..10
         {
-            let x_param = i as f32;
-            path[1+i] = DrawDirective::Line(Point { x: 2.0*x_param, y: 600.0-20.0*((x_param)%5.0) });
+            for i in 0..400
+            {
+                let x_param = i as f32;
+                let f = feigenbaum(depth*8+b,x_param/100.0);
+                path[1+i] = DrawDirective::Line(Point { x: 2.0*x_param, y: 600.0-600.0*f});
+            }
+            anim_out.add_morph_step(&path);
         }
-        anim_out.add_morph_step(&path);
         anim_out.end_morph();
     }
     anim_out.end_scene();
