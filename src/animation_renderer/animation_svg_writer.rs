@@ -1,6 +1,7 @@
 //! The module provides functions to generate svg files.
 
 use crate::animation_renderer::animation_renderer::AnimationRenderer;
+use crate::geometry::path::DrawDirective;
 use std::fs::File;
 use std::io::Write;
 
@@ -27,108 +28,128 @@ impl<'my_lifespan> SvgWriter {
             output_file: File::create(file_name).unwrap(),
         }
     }
+}
 
-    /// The function header converts the vector graphics drawing directive header to svg format
-    ///
-    /// # Arguments
-    ///
-    /// * `view` - The bounding box of the visible area
+/// The VecRenderer struct provides some methods that implement a PathRenderer
+impl<'my_lifespan> AnimationRenderer<'my_lifespan> for SvgWriter {
+    /// This function begins to define an animation path, it writes the header.
     ///
     /// # Panics
     ///
     /// This function panics if the vector graphics cannot be written to a file.
     ///
-    pub(super) fn header(self: &mut Self) -> () {
+    fn begin_scene(self: &mut Self) -> () {
         write!(
             self.output_file,
             "\
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <svg
-    width=\"100%\"
-    height=\"100%\"
-    viewBox=\"{} {} {} {}\"
-    preserveAspectRatio=\"xMidYMid meet\"
-    xmlns=\"http://www.w3.org/2000/svg\"
-    version=\"1.1\"
-    >
+width=\"100%\"
+height=\"100%\"
+viewBox=\"{} {} {} {}\"
+preserveAspectRatio=\"xMidYMid meet\"
+xmlns=\"http://www.w3.org/2000/svg\"
+version=\"1.1\"
+>
 \
-            ",
-            0.0, 0.0, 800.0, 600.0
+",
+0.0, 0.0, 800.0, 600.0
         )
         .expect("Error at writing file");
-    }
-
-    /// The function footer converts the vector graphics drawing directive footer to svg format
-    ///
-    /// # Panics
-    ///
-    /// This function panics if the vector graphics cannot be written to a file.
-    ///
-    pub(super) fn footer(self: &mut Self) -> () {
-        write!(
-        self.output_file,
-        "\
-    <path fill=\"#FF5722\" d=\"M 10 90 L 50 10 L 90 90 L 90 90 Z\">
-        <animate
-        attributeName=\"d\"
-        dur=\"2s\"
-        repeatCount=\"indefinite\"
-        values=\"
-        M 10 90 L 50 10 L 90 90 L 90 90  Z;
-        M 10 10 L 90 10 L 90 90 L 10 90 Z;
-        M 10 90 L 50 10 L 90 90 L 90 90 Z
-        \"
-        />
-    </path>
-    <rect xml:id=\"RectElement\" x=\"300\" y=\"100\" width=\"300\" height=\"100\"
-        fill=\"none\" stroke=\"rgb(255,255,0)\"  >
-        <animate attributeName=\"x\"
-        begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"300\" to=\"0\" />
-        <animate attributeName=\"y\"
-        begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"100\" to=\"0\" />
-        <animate attributeName=\"width\"
-        begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"300\" to=\"800\" />
-        <animate attributeName=\"height\"
-        begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"100\" to=\"300\" />
-    </rect>
-\
-        ",
-        )
-        .expect("Error at writing file");
-
-        write!(self.output_file, "</svg>\n").expect("Error at writing file");
-    }
-}
-
-/// The VecRenderer struct provides some methods that implement a PathRenderer
-impl<'my_lifespan> AnimationRenderer<'my_lifespan> for SvgWriter {
-    /// This function starts to define an animation path, it writes the header.
-    ///
-    fn start(self: &mut Self) -> () {
-        self.header();
     }
 
     /// This function ends an animation path, it writes the footer.
     ///
-    fn end(self: &mut Self) -> () {
-        self.footer();
+    /// # Panics
+    ///
+    /// This function panics if the vector graphics cannot be written to a file.
+    ///
+    fn end_scene(self: &mut Self) -> () {
+        write!(self.output_file, "</svg>\n").expect("Error at writing file");
     }
 
-    /// The function define_animation_path defines an animation path
+    /// This function defines a non-animated path.
     ///
     /// # Arguments
     ///
-    /// * `x` - The segments of the path
-    /// * `y` - The foreground color and width by which the path is stroked
+    /// * `d` - list of drawing directives
     ///
     /// # Panics
     ///
     /// This function panics if the vector graphics cannot be written to a file.
     ///
-    fn define_animation_path(self: &mut Self, _x: f32, _y: f32) -> () {
-        write!(self.output_file, "    <path").expect("Error at writing file");
-        write!(self.output_file, " stroke=\"none\"").expect("Error at writing file");
-        write!(self.output_file, "\"\n    />\n").expect("Error at writing file");
+    fn fix_path(self: &mut Self, d: &[DrawDirective]) -> () {
+
+    }
+
+    /// This function starts the definition of a morphing path.
+    ///
+    /// # Arguments
+    ///
+    /// * `d` - list of drawing directives
+    ///
+    /// # Panics
+    ///
+    /// This function panics if the vector graphics cannot be written to a file.
+    ///
+    fn begin_morph(self: &mut Self, d: &[DrawDirective]) -> () {
+    }
+
+    /// This function adds a step to the definition of a morphing path.
+    ///
+    /// # Arguments
+    ///
+    /// * `d` - list of drawing directives
+    ///
+    /// # Panics
+    ///
+    /// This function panics if the vector graphics cannot be written to a file.
+    ///
+    /// # Panics
+    ///
+    /// This function panics if the vector graphics cannot be written to a file.
+    ///
+    fn add_morph_step(self: &mut Self, d: &[DrawDirective]) -> () {
+
+    }
+
+    /// This function ends the definition of a morphing path.
+    ///
+    /// # Panics
+    ///
+    /// This function panics if the vector graphics cannot be written to a file.
+    ///
+    fn end_morph(self: &mut Self) -> () {
+        write!(
+            self.output_file,
+            "\
+<path fill=\"#FF5722\" d=\"M 10 90 L 50 10 L 90 90 L 90 90 Z\">
+<animate
+attributeName=\"d\"
+dur=\"2s\"
+repeatCount=\"indefinite\"
+values=\"
+M 10 90 L 50 10 L 90 90 L 90 90  Z;
+M 10 10 L 90 10 L 90 90 L 10 90 Z;
+M 10 90 L 50 10 L 90 90 L 90 90 Z
+\"
+/>
+</path>
+<rect xml:id=\"RectElement\" x=\"300\" y=\"100\" width=\"300\" height=\"100\"
+fill=\"none\" stroke=\"rgb(255,255,0)\"  >
+<animate attributeName=\"x\"
+begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"300\" to=\"0\" />
+<animate attributeName=\"y\"
+begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"100\" to=\"0\" />
+<animate attributeName=\"width\"
+begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"300\" to=\"800\" />
+<animate attributeName=\"height\"
+begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"100\" to=\"300\" />
+</rect>
+\
+",
+        )
+        .expect("Error at writing file");
     }
 }
 

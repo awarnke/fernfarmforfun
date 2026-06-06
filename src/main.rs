@@ -3,6 +3,7 @@
 //! This crate renders animated svg files for simulated scenes.
 
 pub mod animation_renderer;
+pub mod geometry;
 pub mod scene_model;
 use animation_renderer::animation_svg_writer;
 use scene_model::scene_feigenbaum;

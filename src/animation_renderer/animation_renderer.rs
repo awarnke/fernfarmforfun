@@ -1,5 +1,7 @@
 //! The module provides functions to render an animation.
 
+use crate::geometry::path::DrawDirective;
+
 /// Defines the data needed to render an icon
 ///
 /// # Lifetimes
@@ -7,21 +9,37 @@
 /// * `'my_lifespan` refers to the lifetime of `AnimationRenderer`
 ///
 pub trait AnimationRenderer<'my_lifespan> {
-    /// This function starts to define an animation path, it writes the header.
+    /// This function begins to define an animation path, it writes the header.
     ///
-    fn start(self: &mut Self) -> ();
+    fn begin_scene(self: &mut Self) -> ();
 
     /// This function ends an animation path, it writes the footer.
     ///
-    fn end(self: &mut Self) -> ();
+    fn end_scene(self: &mut Self) -> ();
 
-    /// This function defines an animation path.
+    /// This function defines a non-animated path.
     ///
     /// # Arguments
     ///
-    /// * `x` - x coordinate
-    /// * `y` - y coordinate
-    fn define_animation_path(self: &mut Self, x: f32, y: f32) -> ();
+    /// * `d` - list of drawing directives
+    fn fix_path(self: &mut Self, d: &[DrawDirective]) -> ();
+
+    /// This function starts the definition of a morphing path.
+    ///
+    /// # Arguments
+    ///
+    /// * `d` - list of drawing directives
+    fn begin_morph(self: &mut Self, d: &[DrawDirective]) -> ();
+
+    /// This function adds a step to the definition of a morphing path.
+    ///
+    /// # Arguments
+    ///
+    /// * `d` - list of drawing directives
+    fn add_morph_step(self: &mut Self, d: &[DrawDirective]) -> ();
+
+    /// This function ends the definition of a morphing path.
+    fn end_morph(self: &mut Self) -> ();
 }
 
 /*

@@ -14,8 +14,11 @@ pub fn render_animation(anim_out: &mut dyn AnimationRenderer) -> () {
     let _rest: f32 = 1.0;
     let _one_third: f32 = 1.0 / 3.0;
     let _two_thirds: f32 = 2.0 / 3.0;
-    anim_out.start();
-    anim_out.end();
+    anim_out.begin_scene();
+    anim_out.begin_morph(&[]);
+    anim_out.add_morph_step(&[]);
+    anim_out.end_morph();
+    anim_out.end_scene();
 }
 
 /*
