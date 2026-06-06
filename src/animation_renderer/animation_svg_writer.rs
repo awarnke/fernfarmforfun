@@ -2,8 +2,18 @@
 
 use crate::animation_renderer::animation_renderer::AnimationRenderer;
 use crate::geometry::path::DrawDirective;
+use crate::geometry::path::Rect;
 use std::fs::File;
 use std::io::Write;
+
+/// This is the rounding unit value for absolute coordinates.
+/// This unit has an exact representation in both binary and decimal.
+const ABS_UNIT: f32 = 0.125;
+
+/// This is the rounding unit value for relative coordinates.
+/// It has higher precision than ABS_UNIT to keep the sum of errors low.
+/// This unit has an exact representation in both binary and decimal.
+const REL_UNIT: f32 = 0.0625;
 
 /// Defines a vector renderer
 pub struct SvgWriter {
@@ -28,6 +38,122 @@ impl<'my_lifespan> SvgWriter {
             output_file: File::create(file_name).unwrap(),
         }
     }
+
+    /// The function writes a list of draw direcrtives
+    ///
+    /// # Arguments
+    ///
+    /// * `file_name` - The file name
+    ///
+    /// # Panics
+    ///
+    /// This function panics if the vector graphics cannot be written to a file.
+    ///
+    fn write_path(self: &mut Self, d: &[DrawDirective]) -> () {
+        for seg in d {
+            match seg {
+                DrawDirective::Move(target) => {
+                    write!(
+                        self.output_file,
+                        "M {},{} ",
+                        target.round_x(ABS_UNIT),
+                        target.round_y(ABS_UNIT)
+                    )
+                }
+                DrawDirective::MoveRel(offset) => {
+                    write!(
+                        self.output_file,
+                        "m {},{} ",
+                        offset.round_dx(REL_UNIT),
+                        offset.round_dy(REL_UNIT)
+                    )
+                }
+                DrawDirective::Line(target) => {
+                    write!(
+                        self.output_file,
+                        "L {},{} ",
+                        target.round_x(ABS_UNIT),
+                        target.round_y(ABS_UNIT)
+                    )
+                }
+                DrawDirective::LineRel(offset) => {
+                    write!(
+                        self.output_file,
+                        "l {},{} ",
+                        offset.round_dx(REL_UNIT),
+                        offset.round_dy(REL_UNIT)
+                    )
+                }
+                DrawDirective::Continue(target) => {
+                    write!(
+                        self.output_file,
+                        "{},{} ",
+                        target.round_x(ABS_UNIT),
+                        target.round_y(ABS_UNIT)
+                    )
+                }
+                DrawDirective::ContinueRel(offset) => {
+                    write!(
+                        self.output_file,
+                        "{},{} ",
+                        offset.round_dx(REL_UNIT),
+                        offset.round_dy(REL_UNIT)
+                    )
+                }
+                DrawDirective::Curve(p1, p2, target) => {
+                    write!(
+                        self.output_file,
+                        "C {},{} {},{} {},{} ",
+                        p1.round_x(ABS_UNIT),
+                        p1.round_y(ABS_UNIT),
+                        p2.round_x(ABS_UNIT),
+                        p2.round_y(ABS_UNIT),
+                        target.round_x(ABS_UNIT),
+                        target.round_y(ABS_UNIT)
+                    )
+                }
+                DrawDirective::CurveRel(o_p1, o_p2, offset) => {
+                    write!(
+                        self.output_file,
+                        "c {},{} {},{} {},{} ",
+                        o_p1.round_dx(REL_UNIT),
+                        o_p1.round_dy(REL_UNIT),
+                        o_p2.round_dx(REL_UNIT),
+                        o_p2.round_dy(REL_UNIT),
+                        offset.round_dx(REL_UNIT),
+                        offset.round_dy(REL_UNIT)
+                    )
+                }
+                DrawDirective::Symmetric(p2, target) => {
+                    write!(
+                        self.output_file,
+                        "S {},{} {},{} ",
+                        p2.round_x(ABS_UNIT),
+                        p2.round_y(ABS_UNIT),
+                        target.round_x(ABS_UNIT),
+                        target.round_y(ABS_UNIT)
+                    )
+                }
+                DrawDirective::SymmetricRel(o_p2, offset) => {
+                    write!(
+                        self.output_file,
+                        "s {},{} {},{} ",
+                        o_p2.round_dx(REL_UNIT),
+                        o_p2.round_dy(REL_UNIT),
+                        offset.round_dx(REL_UNIT),
+                        offset.round_dy(REL_UNIT)
+                    )
+                }
+                DrawDirective::Close => {
+                    write!(self.output_file, "Z ")
+                }
+                DrawDirective::CloseRel => {
+                    write!(self.output_file, "z ")
+                }
+            }
+            .expect("Error at writing file");
+        }
+    }
 }
 
 /// The VecRenderer struct provides some methods that implement a PathRenderer
@@ -38,7 +164,7 @@ impl<'my_lifespan> AnimationRenderer<'my_lifespan> for SvgWriter {
     ///
     /// This function panics if the vector graphics cannot be written to a file.
     ///
-    fn begin_scene(self: &mut Self) -> () {
+    fn begin_scene(self: &mut Self, bounds: Rect) -> () {
         write!(
             self.output_file,
             "\
@@ -52,8 +178,8 @@ xmlns=\"http://www.w3.org/2000/svg\"
 version=\"1.1\"
 >
 \
-",
-0.0, 0.0, 800.0, 600.0
+            ",
+            bounds.left, bounds.top, bounds.width, bounds.height
         )
         .expect("Error at writing file");
     }
@@ -79,7 +205,25 @@ version=\"1.1\"
     /// This function panics if the vector graphics cannot be written to a file.
     ///
     fn fix_path(self: &mut Self, d: &[DrawDirective]) -> () {
+        write!(
+            self.output_file,
+            "\
+<path stroke=\"#222222\" fill=\"none\" d=\"
+\
+",
+        )
+        .expect("Error at writing file");
 
+        self.write_path(d);
+
+        write!(
+            self.output_file,
+            "\
+\" />
+\
+            ",
+        )
+        .expect("Error at writing file");
     }
 
     /// This function starts the definition of a morphing path.
@@ -93,6 +237,32 @@ version=\"1.1\"
     /// This function panics if the vector graphics cannot be written to a file.
     ///
     fn begin_morph(self: &mut Self, d: &[DrawDirective]) -> () {
+        write!(
+            self.output_file,
+            "\
+<path stroke=\"#222222\" fill=\"none\" d=\"
+\
+            ",
+        )
+        .expect("Error at writing file");
+
+        self.write_path(d);
+
+        write!(
+            self.output_file,
+            "\
+\">
+<animate
+attributeName=\"d\"
+dur=\"10s\"
+repeatCount=\"indefinite\"
+values=\"
+\
+            ",
+        )
+        .expect("Error at writing file");
+
+        self.write_path(d);
     }
 
     /// This function adds a step to the definition of a morphing path.
@@ -110,7 +280,16 @@ version=\"1.1\"
     /// This function panics if the vector graphics cannot be written to a file.
     ///
     fn add_morph_step(self: &mut Self, d: &[DrawDirective]) -> () {
+        write!(
+            self.output_file,
+            "\
+;
+\
+",
+        )
+        .expect("Error at writing file");
 
+        self.write_path(d);
     }
 
     /// This function ends the definition of a morphing path.
@@ -123,31 +302,11 @@ version=\"1.1\"
         write!(
             self.output_file,
             "\
-<path fill=\"#FF5722\" d=\"M 10 90 L 50 10 L 90 90 L 90 90 Z\">
-<animate
-attributeName=\"d\"
-dur=\"2s\"
-repeatCount=\"indefinite\"
-values=\"
-M 10 90 L 50 10 L 90 90 L 90 90  Z;
-M 10 10 L 90 10 L 90 90 L 10 90 Z;
-M 10 90 L 50 10 L 90 90 L 90 90 Z
 \"
 />
 </path>
-<rect xml:id=\"RectElement\" x=\"300\" y=\"100\" width=\"300\" height=\"100\"
-fill=\"none\" stroke=\"rgb(255,255,0)\"  >
-<animate attributeName=\"x\"
-begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"300\" to=\"0\" />
-<animate attributeName=\"y\"
-begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"100\" to=\"0\" />
-<animate attributeName=\"width\"
-begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"300\" to=\"800\" />
-<animate attributeName=\"height\"
-begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"100\" to=\"300\" />
-</rect>
 \
-",
+            ",
         )
         .expect("Error at writing file");
     }

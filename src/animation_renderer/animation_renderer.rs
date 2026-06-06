@@ -1,6 +1,7 @@
 //! The module provides functions to render an animation.
 
 use crate::geometry::path::DrawDirective;
+use crate::geometry::path::Rect;
 
 /// Defines the data needed to render an icon
 ///
@@ -11,7 +12,11 @@ use crate::geometry::path::DrawDirective;
 pub trait AnimationRenderer<'my_lifespan> {
     /// This function begins to define an animation path, it writes the header.
     ///
-    fn begin_scene(self: &mut Self) -> ();
+    /// # Arguments
+    ///
+    /// * `bounds` - bounding rectangle of the view box
+    ///
+    fn begin_scene(self: &mut Self, bounds: Rect) -> ();
 
     /// This function ends an animation path, it writes the footer.
     ///
