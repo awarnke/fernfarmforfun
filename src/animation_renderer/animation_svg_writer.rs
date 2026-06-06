@@ -65,6 +65,37 @@ impl<'my_lifespan> SvgWriter {
     /// This function panics if the vector graphics cannot be written to a file.
     ///
     pub(super) fn footer(self: &mut Self) -> () {
+        write!(
+        self.output_file,
+        "\
+    <path fill=\"#FF5722\" d=\"M 10 90 L 50 10 L 90 90 L 90 90 Z\">
+        <animate
+        attributeName=\"d\"
+        dur=\"2s\"
+        repeatCount=\"indefinite\"
+        values=\"
+        M 10 90 L 50 10 L 90 90 L 90 90  Z;
+        M 10 10 L 90 10 L 90 90 L 10 90 Z;
+        M 10 90 L 50 10 L 90 90 L 90 90 Z
+        \"
+        />
+    </path>
+    <rect xml:id=\"RectElement\" x=\"300\" y=\"100\" width=\"300\" height=\"100\"
+        fill=\"none\" stroke=\"rgb(255,255,0)\"  >
+        <animate attributeName=\"x\"
+        begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"300\" to=\"0\" />
+        <animate attributeName=\"y\"
+        begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"100\" to=\"0\" />
+        <animate attributeName=\"width\"
+        begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"300\" to=\"800\" />
+        <animate attributeName=\"height\"
+        begin=\"0s\" dur=\"9s\" fill=\"freeze\" from=\"100\" to=\"300\" />
+    </rect>
+\
+        ",
+        )
+        .expect("Error at writing file");
+
         write!(self.output_file, "</svg>\n").expect("Error at writing file");
     }
 }
