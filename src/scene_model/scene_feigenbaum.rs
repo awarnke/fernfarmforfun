@@ -11,14 +11,14 @@ use crate::geometry::path::Rect;
 ///
 /// # Arguments
 ///
-/// * `anim_out` - the writer that converts the animated scene to svg
+/// * `iter_max` - number of iterations after that the value shall be returned
+/// * `system_param` - parameter describing growth and decay in the given system
 ///
-fn feigenbaum(iter_max:i32,system_param: f32) -> f32 {
+fn feigenbaum(iter_max: i32, system_param: f32) -> f32 {
     let precise_b: f64 = system_param as f64;
     let mut iter_value: f64 = 0.5_f64;
-    for _i in 1..iter_max
-    {
-        iter_value = precise_b * iter_value * ( 1.0_f64 - iter_value );
+    for _i in 1..iter_max {
+        iter_value = precise_b * iter_value * (1.0_f64 - iter_value);
     }
     iter_value as f32
 }
@@ -43,23 +43,25 @@ pub fn render_animation(anim_out: &mut dyn AnimationRenderer) -> () {
         width: 800.0,
         height: 600.0,
     });
-    for b in 0..8
-    {
-        let mut path: [DrawDirective; 401] = [DrawDirective::Move(Point { x: 0.0, y: 600.0 });401];
-        for i in 0..400
-        {
+    for b in 0..8 {
+        let mut path: [DrawDirective; 401] = [DrawDirective::Move(Point { x: 0.0, y: 600.0 }); 401];
+        for i in 0..400 {
             let x_param = i as f32;
-            let f = feigenbaum(1+b,x_param/100.0);
-            path[1+i] = DrawDirective::Line(Point { x: 2.0*x_param, y: 600.0-600.0*f });
+            let f = feigenbaum(1 + b, x_param / 100.0);
+            path[1 + i] = DrawDirective::Line(Point {
+                x: 2.0 * x_param,
+                y: 600.0 - 600.0 * f,
+            });
         }
         anim_out.begin_morph(&path);
-        for depth in 1..10
-        {
-            for i in 0..400
-            {
+        for depth in 1..10 {
+            for i in 0..400 {
                 let x_param = i as f32;
-                let f = feigenbaum(depth*8+b,x_param/100.0);
-                path[1+i] = DrawDirective::Line(Point { x: 2.0*x_param, y: 600.0-600.0*f});
+                let f = feigenbaum(depth * 8 + b, x_param / 100.0);
+                path[1 + i] = DrawDirective::Line(Point {
+                    x: 2.0 * x_param,
+                    y: 600.0 - 600.0 * f,
+                });
             }
             anim_out.add_morph_step(&path);
         }
