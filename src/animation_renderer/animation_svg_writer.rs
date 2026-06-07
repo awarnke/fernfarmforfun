@@ -5,12 +5,12 @@ use crate::geometry::path::DrawDirective;
 use crate::geometry::path::Rect;
 use std::fs;
 use std::fs::File;
-use std::path::PathBuf;
 use std::io::Write;
+use std::path::PathBuf;
 
 /// This is the rounding unit value for absolute coordinates.
 /// This unit has an exact representation in both binary and decimal.
-const ABS_UNIT: f32 = 0.125;
+const ABS_UNIT: f32 = 0.25;
 
 /// This is the rounding unit value for relative coordinates.
 /// It has higher precision than ABS_UNIT to keep the sum of errors low.
@@ -216,7 +216,7 @@ version=\"1.1\"
             "\
 <path stroke=\"#222222\" fill=\"none\" d=\"
 \
-",
+            ",
         )
         .expect("Error at writing file");
 
@@ -224,7 +224,7 @@ version=\"1.1\"
 
         write!(
             self.output_file,
-            "\
+            "
 \" />
 \
             ",
@@ -256,7 +256,7 @@ version=\"1.1\"
 
         write!(
             self.output_file,
-            "\
+            "
 \">
 <animate
 attributeName=\"d\"
@@ -291,7 +291,7 @@ values=\"
             "\
 ;
 \
-",
+            ",
         )
         .expect("Error at writing file");
 
@@ -307,9 +307,8 @@ values=\"
     fn end_morph(self: &mut Self) -> () {
         write!(
             self.output_file,
-            "\
-\"
-/>
+            "
+\" />
 </path>
 \
             ",

@@ -23,18 +23,18 @@ fn feigenbaum(iter_max: i32, system_param: f32) -> f32 {
     iter_value as f32
 }
 
-fn stretch_scale(x:f32,max:f32)->f32{
+fn stretch_scale(x: f32, max: f32) -> f32 {
     // scale
     const SCALED_LEFT: f32 = 0.25;
     const SCALED_BOUNDS: f32 = 0.5;
     let from_right = max - x;
-    let scaled_from_right = from_right*SCALED_BOUNDS/max+SCALED_LEFT;
+    let scaled_from_right = from_right * SCALED_BOUNDS / max + SCALED_LEFT;
     //adjust
     let adjusted = scaled_from_right * scaled_from_right;
     let adjusted_min = SCALED_LEFT * SCALED_LEFT;
-    let adjusted_max = (SCALED_LEFT+SCALED_BOUNDS)*(SCALED_LEFT+SCALED_BOUNDS);
+    let adjusted_max = (SCALED_LEFT + SCALED_BOUNDS) * (SCALED_LEFT + SCALED_BOUNDS);
     // convert back
-    max - (adjusted-adjusted_min)/(adjusted_max-adjusted_min)*max
+    max - (adjusted - adjusted_min) / (adjusted_max - adjusted_min) * max
 }
 
 /// The function defines the draw directives for the reflections per facet
@@ -50,6 +50,7 @@ pub fn render_animation(anim_out: &mut dyn AnimationRenderer) -> () {
     let view_w: f32 = 800.0;
     let view_b: f32 = 610.0;
     let view_h: f32 = 600.0;
+    let gap: f32 = 5.0;
     const STEPS: usize = 160;
     const X_RANGE: f32 = 4.0;
 
@@ -59,9 +60,28 @@ pub fn render_animation(anim_out: &mut dyn AnimationRenderer) -> () {
         width: 840.0,
         height: 630.0,
     });
+
+    let axis: [DrawDirective; 3] = [
+        DrawDirective::Move(Point {
+            x: view_l - gap,
+            y: view_b - view_h,
+        }),
+        DrawDirective::Line(Point {
+            x: view_l - gap,
+            y: view_b + gap,
+        }),
+        DrawDirective::Line(Point {
+            x: view_l + view_w,
+            y: view_b + gap,
+        }),
+    ];
+    anim_out.fix_path(&axis);
+
     for branch in 0..8 {
-        let mut path: [DrawDirective; 1 + STEPS] =
-            [DrawDirective::Move(Point { x: 0.0, y: 600.0 }); 1 + STEPS];
+        let mut path: [DrawDirective; 1 + STEPS] = [DrawDirective::Move(Point {
+            x: view_l,
+            y: view_b,
+        }); 1 + STEPS];
 
         // init path with first animation step
         let f0 = feigenbaum(1 + branch, 0.0);
@@ -69,11 +89,11 @@ pub fn render_animation(anim_out: &mut dyn AnimationRenderer) -> () {
             x: view_l,
             y: view_b - f0 * view_h,
         });
-        for i in 0..STEPS {
+        for i in 1..=STEPS {
             let x_param = (i as f32) / (STEPS as f32) * X_RANGE;
-            let x_adjusted = stretch_scale(x_param,X_RANGE);
+            let x_adjusted = stretch_scale(x_param, X_RANGE);
             let f = feigenbaum(1 + branch, x_adjusted);
-            path[1 + i] = DrawDirective::Line(Point {
+            path[i] = DrawDirective::Line(Point {
                 x: view_l + x_adjusted / X_RANGE * view_w,
                 y: view_b - f * view_h,
             });
@@ -87,11 +107,11 @@ pub fn render_animation(anim_out: &mut dyn AnimationRenderer) -> () {
                 x: view_l,
                 y: view_b - f0 * view_h,
             });
-            for i in 0..STEPS {
+            for i in 1..=STEPS {
                 let x_param = (i as f32) / (STEPS as f32) * X_RANGE;
-                let x_adjusted = stretch_scale(x_param,X_RANGE);
+                let x_adjusted = stretch_scale(x_param, X_RANGE);
                 let f = feigenbaum(depth * 8 + branch, x_adjusted);
-                path[1 + i] = DrawDirective::Line(Point {
+                path[i] = DrawDirective::Line(Point {
                     x: view_l + x_adjusted / X_RANGE * view_w,
                     y: view_b - f * view_h,
                 });
