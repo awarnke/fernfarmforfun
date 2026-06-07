@@ -40,6 +40,18 @@
             "classifier_name": "main",
             "node": "2e8164ab-c0d1-43df-9a6b-bd930dba20e4",
             "uuid": "492e1d3d-c0c5-4fbd-953c-86d2360baf7e"
+          },
+          {
+            "id": 4,
+            "classifier_name": "geometry",
+            "node": "a3388f56-ab1e-4c50-b784-6f6450fad030",
+            "uuid": "7ef90335-aca9-4ec9-9d11-fb38c47385b7"
+          },
+          {
+            "id": 5,
+            "classifier_name": "fernfarmforfun",
+            "node": "f0407d04-cce2-4b68-b394-ac90a2b5c5eb",
+            "uuid": "d961484f-86e9-4d19-9294-974d07ad9a49"
           }
         ]
       }
@@ -118,6 +130,40 @@
         [
         ]
       }
+    },
+    {
+      "classifier": {
+        "id": 4,
+        "type": "Package", "main_type": 124,
+        "name": "geometry",
+        "description": [
+                ""
+        ],
+        "x_order": 1089994203,
+        "y_order": 14874059,
+        "list_order": 14874059,
+        "uuid": "a3388f56-ab1e-4c50-b784-6f6450fad030",
+        "features":
+        [
+        ]
+      }
+    },
+    {
+      "classifier": {
+        "id": 5,
+        "type": "Component", "main_type": 121,
+        "name": "fernfarmforfun",
+        "description": [
+                ""
+        ],
+        "x_order": -1783932012,
+        "y_order": -1715130181,
+        "list_order": -1715130181,
+        "uuid": "f0407d04-cce2-4b68-b394-ac90a2b5c5eb",
+        "features":
+        [
+        ]
+      }
     }
   ]
   ,
@@ -142,6 +188,22 @@
     },
     {
       "relationship": {
+        "id": 6,
+        "type": "Dependency", "main_type": 0,
+        "name": "",
+        "description": [
+                ""
+        ],
+        "list_order": 196608,
+        "from_classifier_name": "scene_model",
+        "from_node": "5c819f27-7250-47b3-bf14-24356fe91373",
+        "to_classifier_name": "geometry",
+        "to_node": "a3388f56-ab1e-4c50-b784-6f6450fad030",
+        "uuid": "98015d76-0597-4735-992d-08f81bc4c736"
+      }
+    },
+    {
+      "relationship": {
         "id": 1,
         "type": "Communication Path", "main_type": 230,
         "name": "",
@@ -156,6 +218,22 @@
         "to_feature_key": "render",
         "to_node": "f756b493-2436-4c78-96c5-584cb726e6a8",
         "uuid": "2eed726e-4ba1-4d04-8446-30137acbd6ca"
+      }
+    },
+    {
+      "relationship": {
+        "id": 5,
+        "type": "Dependency", "main_type": 0,
+        "name": "",
+        "description": [
+                ""
+        ],
+        "list_order": 163840,
+        "from_classifier_name": "animaion_renderer",
+        "from_node": "0cffab0a-3fc5-4b39-9709-83b782cab633",
+        "to_classifier_name": "geometry",
+        "to_node": "a3388f56-ab1e-4c50-b784-6f6450fad030",
+        "uuid": "ec28e5e1-d4a4-43ee-b68c-66762e901a91"
       }
     },
     {
@@ -188,6 +266,70 @@
         "to_classifier_name": "scene_model",
         "to_node": "5c819f27-7250-47b3-bf14-24356fe91373",
         "uuid": "8ced446e-020e-4051-a38a-761c03f54072"
+      }
+    },
+    {
+      "relationship": {
+        "id": 7,
+        "type": "Containment", "main_type": 300,
+        "name": "",
+        "description": [
+                ""
+        ],
+        "list_order": 229376,
+        "from_classifier_name": "fernfarmforfun",
+        "from_node": "f0407d04-cce2-4b68-b394-ac90a2b5c5eb",
+        "to_classifier_name": "main",
+        "to_node": "2e8164ab-c0d1-43df-9a6b-bd930dba20e4",
+        "uuid": "77ca8eef-6f37-41e9-a588-9e6b4fab9d05"
+      }
+    },
+    {
+      "relationship": {
+        "id": 8,
+        "type": "Containment", "main_type": 300,
+        "name": "",
+        "description": [
+                ""
+        ],
+        "list_order": 262144,
+        "from_classifier_name": "fernfarmforfun",
+        "from_node": "f0407d04-cce2-4b68-b394-ac90a2b5c5eb",
+        "to_classifier_name": "animaion_renderer",
+        "to_node": "0cffab0a-3fc5-4b39-9709-83b782cab633",
+        "uuid": "cd1bbdbd-b826-407e-a3fe-c68db0e5e58d"
+      }
+    },
+    {
+      "relationship": {
+        "id": 9,
+        "type": "Containment", "main_type": 300,
+        "name": "",
+        "description": [
+                ""
+        ],
+        "list_order": 294912,
+        "from_classifier_name": "fernfarmforfun",
+        "from_node": "f0407d04-cce2-4b68-b394-ac90a2b5c5eb",
+        "to_classifier_name": "scene_model",
+        "to_node": "5c819f27-7250-47b3-bf14-24356fe91373",
+        "uuid": "a25bf5b9-f02d-4275-84fc-791adff9b167"
+      }
+    },
+    {
+      "relationship": {
+        "id": 10,
+        "type": "Containment", "main_type": 300,
+        "name": "",
+        "description": [
+                ""
+        ],
+        "list_order": 327680,
+        "from_classifier_name": "fernfarmforfun",
+        "from_node": "f0407d04-cce2-4b68-b394-ac90a2b5c5eb",
+        "to_classifier_name": "geometry",
+        "to_node": "a3388f56-ab1e-4c50-b784-6f6450fad030",
+        "uuid": "4c5c2a26-7be9-4381-999b-22dccc7fc50f"
       }
     }
   ]

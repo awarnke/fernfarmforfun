@@ -3,7 +3,9 @@
 use crate::animation_renderer::animation_renderer::AnimationRenderer;
 use crate::geometry::path::DrawDirective;
 use crate::geometry::path::Rect;
+use std::fs;
 use std::fs::File;
+use std::path::PathBuf;
 use std::io::Write;
 
 /// This is the rounding unit value for absolute coordinates.
@@ -27,15 +29,19 @@ impl<'my_lifespan> SvgWriter {
     ///
     /// # Arguments
     ///
+    /// * `folder_name` - The folder name
     /// * `file_name` - The file name
     ///
     /// # Panics
     ///
     /// This function panics if the vector graphics cannot be written to a file.
     ///
-    pub fn new(file_name: &str) -> SvgWriter {
+    pub fn new(folder_name: &str, file_name: &str) -> SvgWriter {
+        fs::create_dir_all(folder_name).unwrap();
+        let mut file_path = PathBuf::from(folder_name);
+        file_path.push(file_name);
         SvgWriter {
-            output_file: File::create(file_name).unwrap(),
+            output_file: File::create(&file_path).unwrap(),
         }
     }
 

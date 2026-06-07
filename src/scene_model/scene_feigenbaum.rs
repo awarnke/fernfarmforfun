@@ -23,6 +23,20 @@ fn feigenbaum(iter_max: i32, system_param: f32) -> f32 {
     iter_value as f32
 }
 
+fn stretch_scale(x:f32,max:f32)->f32{
+    // scale
+    const SCALED_LEFT: f32 = 0.25;
+    const SCALED_BOUNDS: f32 = 0.5;
+    let from_right = max - x;
+    let scaled_from_right = from_right*SCALED_BOUNDS/max+SCALED_LEFT;
+    //adjust
+    let adjusted = scaled_from_right * scaled_from_right;
+    let adjusted_min = SCALED_LEFT * SCALED_LEFT;
+    let adjusted_max = (SCALED_LEFT+SCALED_BOUNDS)*(SCALED_LEFT+SCALED_BOUNDS);
+    // convert back
+    max - (adjusted-adjusted_min)/(adjusted_max-adjusted_min)*max
+}
+
 /// The function defines the draw directives for the reflections per facet
 ///
 /// The first edge is completely covered by the result polygon
@@ -32,35 +46,54 @@ fn feigenbaum(iter_max: i32, system_param: f32) -> f32 {
 /// * `anim_out` - the writer that converts the animated scene to svg
 ///
 pub fn render_animation(anim_out: &mut dyn AnimationRenderer) -> () {
-    let _take: f32 = 1.0;
-    let _rest: f32 = 1.0;
-    let _one_third: f32 = 1.0 / 3.0;
-    let _two_thirds: f32 = 2.0 / 3.0;
+    let view_l: f32 = 20.0;
+    let view_w: f32 = 800.0;
+    let view_b: f32 = 610.0;
+    let view_h: f32 = 600.0;
+    const STEPS: usize = 160;
+    const X_RANGE: f32 = 4.0;
 
     anim_out.begin_scene(Rect {
         left: 0.0,
         top: 0.0,
-        width: 800.0,
-        height: 600.0,
+        width: 840.0,
+        height: 630.0,
     });
-    for b in 0..8 {
-        let mut path: [DrawDirective; 401] = [DrawDirective::Move(Point { x: 0.0, y: 600.0 }); 401];
-        for i in 0..400 {
-            let x_param = i as f32;
-            let f = feigenbaum(1 + b, x_param / 100.0);
+    for branch in 0..8 {
+        let mut path: [DrawDirective; 1 + STEPS] =
+            [DrawDirective::Move(Point { x: 0.0, y: 600.0 }); 1 + STEPS];
+
+        // init path with first animation step
+        let f0 = feigenbaum(1 + branch, 0.0);
+        path[0] = DrawDirective::Move(Point {
+            x: view_l,
+            y: view_b - f0 * view_h,
+        });
+        for i in 0..STEPS {
+            let x_param = (i as f32) / (STEPS as f32) * X_RANGE;
+            let x_adjusted = stretch_scale(x_param,X_RANGE);
+            let f = feigenbaum(1 + branch, x_adjusted);
             path[1 + i] = DrawDirective::Line(Point {
-                x: 2.0 * x_param,
-                y: 600.0 - 600.0 * f,
+                x: view_l + x_adjusted / X_RANGE * view_w,
+                y: view_b - f * view_h,
             });
         }
         anim_out.begin_morph(&path);
+
+        // add further animation steps
         for depth in 1..10 {
-            for i in 0..400 {
-                let x_param = i as f32;
-                let f = feigenbaum(depth * 8 + b, x_param / 100.0);
+            let f0 = feigenbaum(depth * 8 + branch, 0.0);
+            path[0] = DrawDirective::Move(Point {
+                x: view_l,
+                y: view_b - f0 * view_h,
+            });
+            for i in 0..STEPS {
+                let x_param = (i as f32) / (STEPS as f32) * X_RANGE;
+                let x_adjusted = stretch_scale(x_param,X_RANGE);
+                let f = feigenbaum(depth * 8 + branch, x_adjusted);
                 path[1 + i] = DrawDirective::Line(Point {
-                    x: 2.0 * x_param,
-                    y: 600.0 - 600.0 * f,
+                    x: view_l + x_adjusted / X_RANGE * view_w,
+                    y: view_b - f * view_h,
                 });
             }
             anim_out.add_morph_step(&path);

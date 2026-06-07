@@ -17,7 +17,7 @@ fn main() {
         let arg = argument.as_str();
         if arg == "-f" {
             let mut svg_writer: animation_svg_writer::SvgWriter =
-                animation_svg_writer::SvgWriter::new("feigenbaum.svg");
+                animation_svg_writer::SvgWriter::new("out", "feigenbaum.svg");
             scene_feigenbaum::render_animation(&mut svg_writer);
             println!("Generated files have been written to '{}'.", ".");
         }
