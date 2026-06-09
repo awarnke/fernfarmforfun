@@ -7,8 +7,6 @@ use crate::geometry::path::Rect;
 
 /// The function defines the draw directives for the reflections per facet
 ///
-/// The first edge is completely covered by the result polygon
-///
 /// # Arguments
 ///
 /// * `iter_max` - number of iterations after that the value shall be returned
@@ -23,6 +21,13 @@ fn feigenbaum(iter_max: i32, system_param: f32) -> f32 {
     iter_value as f32
 }
 
+/// The function stretches the x-axis so that more points exist on the right side of the graph
+///
+/// # Arguments
+///
+/// * `x` - current x coordinate
+/// * `max` - maximum range that x may take
+///
 fn stretch_scale(x: f32, max: f32) -> f32 {
     // scale
     const SCALED_LEFT: f32 = 0.25;
@@ -38,8 +43,6 @@ fn stretch_scale(x: f32, max: f32) -> f32 {
 }
 
 /// The function defines the draw directives for the reflections per facet
-///
-/// The first edge is completely covered by the result polygon
 ///
 /// # Arguments
 ///

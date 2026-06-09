@@ -7,6 +7,7 @@ pub mod geometry;
 pub mod scene_model;
 use animation_renderer::animation_svg_writer;
 use scene_model::scene_feigenbaum;
+use scene_model::scene_leaf_of_fern;
 use std::env;
 
 /// The main function defines parameters and starts the icon_writer.
@@ -19,12 +20,19 @@ fn main() {
             let mut svg_writer: animation_svg_writer::SvgWriter =
                 animation_svg_writer::SvgWriter::new("out", "feigenbaum.svg");
             scene_feigenbaum::render_animation(&mut svg_writer);
-            println!("Generated files have been written to '{}'.", ".");
+            println!("Generated files have been written to '{}'.", "out");
+        }
+        if arg == "-l" {
+            let mut svg_writer: animation_svg_writer::SvgWriter =
+            animation_svg_writer::SvgWriter::new("out", "leaf_of_fern.svg");
+            scene_leaf_of_fern::render_animation(&mut svg_writer);
+            println!("Generated files have been written to '{}'.", "out");
         }
 
         if arg == "-h" {
             println!("options are");
             println!("-f animate feigenbaum");
+            println!("-l animate leaf of fern");
         }
     }
 }

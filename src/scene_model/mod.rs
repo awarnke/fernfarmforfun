@@ -1,6 +1,7 @@
 //! This module provides a dynamic, simulated model scene to be animated.
 
 pub mod scene_feigenbaum;
+pub mod scene_leaf_of_fern;
 
 /*
 Copyright 2026-2026 Andreas Warnke

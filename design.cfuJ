@@ -55,6 +55,41 @@
           }
         ]
       }
+    },
+    {
+      "diagram": {
+        "id": 2,
+        "type": "Component Diagram", "diagram_type": 31,
+        "name": "scene models",
+        "description": [
+                ""
+        ],
+        "list_order": 32768,
+        "parent_name": "Modules",
+        "parent": "a7b41f08-692d-48f9-a820-63e993118011",
+        "uuid": "8310a8f4-5ccc-4686-bf26-b55081452577",
+        "diagramelements":
+        [
+          {
+            "id": 6,
+            "classifier_name": "scene_model",
+            "node": "5c819f27-7250-47b3-bf14-24356fe91373",
+            "uuid": "41e20f3f-6db1-4899-bd97-0f255990195b"
+          },
+          {
+            "id": 7,
+            "classifier_name": "feigenbaum",
+            "node": "47729f6c-0b91-4ad5-854b-310bcc78759c",
+            "uuid": "59d0193f-60c6-4470-978e-33385f42a757"
+          },
+          {
+            "id": 8,
+            "classifier_name": "leaf of fern",
+            "node": "82bafc00-db85-4cd3-9fd8-3c3a8699f34a",
+            "uuid": "2b0fe271-4b29-4d70-95e0-5d42ce80ac72"
+          }
+        ]
+      }
     }
   ]
   ,
@@ -164,6 +199,40 @@
         [
         ]
       }
+    },
+    {
+      "classifier": {
+        "id": 6,
+        "type": "Class", "main_type": 125,
+        "name": "feigenbaum",
+        "description": [
+                ""
+        ],
+        "x_order": -1535419870,
+        "y_order": -902241713,
+        "list_order": -902241713,
+        "uuid": "47729f6c-0b91-4ad5-854b-310bcc78759c",
+        "features":
+        [
+        ]
+      }
+    },
+    {
+      "classifier": {
+        "id": 7,
+        "type": "Class", "main_type": 125,
+        "name": "leaf of fern",
+        "description": [
+                ""
+        ],
+        "x_order": -283467609,
+        "y_order": -902241713,
+        "list_order": -808166952,
+        "uuid": "82bafc00-db85-4cd3-9fd8-3c3a8699f34a",
+        "features":
+        [
+        ]
+      }
     }
   ]
   ,
@@ -200,6 +269,38 @@
         "to_classifier_name": "geometry",
         "to_node": "a3388f56-ab1e-4c50-b784-6f6450fad030",
         "uuid": "98015d76-0597-4735-992d-08f81bc4c736"
+      }
+    },
+    {
+      "relationship": {
+        "id": 11,
+        "type": "Containment", "main_type": 300,
+        "name": "",
+        "description": [
+                ""
+        ],
+        "list_order": -902241713,
+        "from_classifier_name": "scene_model",
+        "from_node": "5c819f27-7250-47b3-bf14-24356fe91373",
+        "to_classifier_name": "feigenbaum",
+        "to_node": "47729f6c-0b91-4ad5-854b-310bcc78759c",
+        "uuid": "69b39fcc-7a2a-4ebf-a0fe-76ef33b145cc"
+      }
+    },
+    {
+      "relationship": {
+        "id": 12,
+        "type": "Containment", "main_type": 300,
+        "name": "",
+        "description": [
+                ""
+        ],
+        "list_order": -808166952,
+        "from_classifier_name": "scene_model",
+        "from_node": "5c819f27-7250-47b3-bf14-24356fe91373",
+        "to_classifier_name": "leaf of fern",
+        "to_node": "82bafc00-db85-4cd3-9fd8-3c3a8699f34a",
+        "uuid": "05fe3ead-46d4-471a-a5c8-4b58c01fb8f8"
       }
     },
     {
