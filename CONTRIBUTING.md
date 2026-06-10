@@ -7,7 +7,7 @@ Please file each bug fix, code adaption or new feature in a separate pull reques
 Code of conduct
 ===============
 
-Coding hits:
+Coding hints:
 - for generating fractals, use only rust
 - the output format shall be svg with SMIL animations
 - use rustfmt for formatting

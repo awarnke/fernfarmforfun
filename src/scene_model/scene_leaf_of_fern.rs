@@ -11,48 +11,89 @@ use crate::geometry::path::Rect;
 ///
 /// * `start` - point where to start
 /// * `angle` - the angle of the main trunk
+/// * `bend_left` - flag if the main trunk shall bend left or right
 /// * `tension` - the additional tension on the trunk and branches
 /// * `seg_len` - length of next segment
 /// * `out_segs` - points to be filled in
 ///
-fn leaf_of_fern(start: &Point, angle: f32, bend_left: bool, tension: f32, seg_len: f32, out_segs: &mut [DrawDirective] ) -> () {
+fn leaf_of_fern(
+    start: &Point,
+    angle: f32,
+    bend_left: bool,
+    tension: f32,
+    seg_len: f32,
+    out_segs: &mut [DrawDirective],
+) -> () {
     let out_len: usize = out_segs.len();
-    let reserve: usize = if out_len >= 6 {4} else {0};
-    let left_space: usize = out_len/8+reserve/2;
-    let right_space: usize = out_len/7+reserve/2;
+    let reserve: usize = if out_len >= 6 { 4 } else { 0 };
+    let left_space: usize = out_len / 8 + reserve / 2;
+    let right_space: usize = out_len / 7 + reserve / 2;
     let fwd_space: usize = out_len - left_space - right_space;
 
-    if fwd_space >= 1
-    {
+    if fwd_space >= 1 {
         /* determine fwd point */
-        let fwd: Point = {Point{x: start.x-seg_len*(angle+tension).sin(),y:start.y-seg_len*(angle+tension).cos()}};
+        let fwd: Point = {
+            Point {
+                x: start.x - seg_len * (angle + tension).sin(),
+                y: start.y - seg_len * (angle + tension).cos(),
+            }
+        };
         out_segs[0] = DrawDirective::Line(fwd);
         /* determine up angle*/
-        let bend: f32 = if bend_left {0.02} else {-0.02};
+        let bend: f32 = if bend_left { 0.02 } else { -0.02 };
         /* recursion */
-        leaf_of_fern(&fwd,angle+bend+tension,bend_left,tension,0.92*seg_len,&mut out_segs[1..fwd_space]);
+        leaf_of_fern(
+            &fwd,
+            angle + bend + tension,
+            bend_left,
+            tension,
+            0.92 * seg_len,
+            &mut out_segs[1..fwd_space],
+        );
     }
-    if left_space >= 1
-    {
+    if left_space >= 1 {
         /* determine left point */
-        let seg_ninety_len = seg_len *0.9;
-        let left: Point = {Point{x: start.x-seg_ninety_len*(angle+tension).sin(),y:start.y-seg_ninety_len*(angle+tension).cos()}};
+        let seg_ninety_len = seg_len * 0.9;
+        let left: Point = {
+            Point {
+                x: start.x - seg_ninety_len * (angle + tension).sin(),
+                y: start.y - seg_ninety_len * (angle + tension).cos(),
+            }
+        };
         out_segs[fwd_space] = DrawDirective::Move(left);
         /* recursion */
-        leaf_of_fern(&left,angle+1.0,!bend_left,tension+tension,0.3*seg_len,&mut out_segs[fwd_space+1..fwd_space+left_space]);
+        leaf_of_fern(
+            &left,
+            angle + 1.0,
+            !bend_left,
+            tension + tension,
+            0.3 * seg_len,
+            &mut out_segs[fwd_space + 1..fwd_space + left_space],
+        );
     }
-    if right_space >= 1
-    {
+    if right_space >= 1 {
         /* determine left point */
-        let seg_sixty_len = seg_len *0.6;
-        let right: Point = {Point{x: start.x-seg_sixty_len*(angle+tension).sin(),y:start.y-seg_sixty_len*(angle+tension).cos()}};
-        out_segs[fwd_space+left_space] = DrawDirective::Move(right);
+        let seg_sixty_len = seg_len * 0.6;
+        let right: Point = {
+            Point {
+                x: start.x - seg_sixty_len * (angle + tension).sin(),
+                y: start.y - seg_sixty_len * (angle + tension).cos(),
+            }
+        };
+        out_segs[fwd_space + left_space] = DrawDirective::Move(right);
         /* recursion */
-        leaf_of_fern(&right,angle-1.0,bend_left,tension+tension,0.4*seg_len,&mut out_segs[fwd_space+left_space+1..out_len]);
+        leaf_of_fern(
+            &right,
+            angle - 1.0,
+            bend_left,
+            tension + tension,
+            0.4 * seg_len,
+            &mut out_segs[fwd_space + left_space + 1..out_len],
+        );
     }
 }
 
-/// The function defines the draw directives for the reflections per facet
+/// The function simulates the fern leaf and renders it to an animation
 ///
 /// # Arguments
 ///
@@ -91,17 +132,36 @@ pub fn render_animation(anim_out: &mut dyn AnimationRenderer) -> () {
     }); SEGMENTS];
 
     // first animation step
-    let root: Point = {Point{x: view_l+0.5*view_w,y:view_b}};
-    path[0]=DrawDirective::Move(root);
-    leaf_of_fern(&root,-0.15,true,-0.02,0.1*view_h,&mut path[1..SEGMENTS]);
+    let root: Point = {
+        Point {
+            x: view_l + 0.5 * view_w,
+            y: view_b,
+        }
+    };
+    path[0] = DrawDirective::Move(root);
+    leaf_of_fern(
+        &root,
+        -0.15,
+        true,
+        -0.02,
+        0.1 * view_h,
+        &mut path[1..SEGMENTS],
+    );
     anim_out.begin_morph(&path);
 
     // add further animation steps
-    let tension_steps:[f32;6] = [-0.01,0.01,0.02,0.01,-0.01,-0.02];
+    let tension_steps: [f32; 6] = [-0.01, 0.01, 0.02, 0.01, -0.01, -0.02];
     for step in 0..6 {
         let tension: f32 = tension_steps[step];
-        path[0]=DrawDirective::Move(root);
-        leaf_of_fern(&root,-0.15,true,tension,0.1*view_h,&mut path[1..SEGMENTS]);
+        path[0] = DrawDirective::Move(root);
+        leaf_of_fern(
+            &root,
+            -0.15,
+            true,
+            tension,
+            0.1 * view_h,
+            &mut path[1..SEGMENTS],
+        );
         anim_out.add_morph_step(&path);
     }
     anim_out.end_morph();

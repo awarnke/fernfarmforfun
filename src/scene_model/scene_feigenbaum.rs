@@ -5,7 +5,7 @@ use crate::geometry::path::DrawDirective;
 use crate::geometry::path::Point;
 use crate::geometry::path::Rect;
 
-/// The function defines the draw directives for the reflections per facet
+/// The function calculated the values of the feigenbaum fractal
 ///
 /// # Arguments
 ///
@@ -22,6 +22,8 @@ fn feigenbaum(iter_max: i32, system_param: f32) -> f32 {
 }
 
 /// The function stretches the x-axis so that more points exist on the right side of the graph
+///
+/// It currently assumes (correctly) that the min value of the interval is 0.0
 ///
 /// # Arguments
 ///
@@ -42,7 +44,7 @@ fn stretch_scale(x: f32, max: f32) -> f32 {
     max - (adjusted - adjusted_min) / (adjusted_max - adjusted_min) * max
 }
 
-/// The function defines the draw directives for the reflections per facet
+/// The function simulates the fractal over the recursion depth, output is an svg animation
 ///
 /// # Arguments
 ///

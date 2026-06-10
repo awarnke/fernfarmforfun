@@ -10,7 +10,7 @@ use scene_model::scene_feigenbaum;
 use scene_model::scene_leaf_of_fern;
 use std::env;
 
-/// The main function defines parameters and starts the icon_writer.
+/// The main function checks the parameters and starts the model simulation.
 fn main() {
     let args: Vec<String> = env::args().collect();
 
@@ -24,7 +24,7 @@ fn main() {
         }
         if arg == "-l" {
             let mut svg_writer: animation_svg_writer::SvgWriter =
-            animation_svg_writer::SvgWriter::new("out", "leaf_of_fern.svg");
+                animation_svg_writer::SvgWriter::new("out", "leaf_of_fern.svg");
             scene_leaf_of_fern::render_animation(&mut svg_writer);
             println!("Generated files have been written to '{}'.", "out");
         }
