@@ -17,7 +17,8 @@
         "type": "Component Diagram", "diagram_type": 31,
         "name": "Modules",
         "description": [
-                ""
+                "This diagram shows the dependencies and interactions between the packages of ",
+                "fernfarmforfun."
         ],
         "list_order": 0,
         "uuid": "a7b41f08-692d-48f9-a820-63e993118011",
@@ -62,7 +63,7 @@
         "type": "Component Diagram", "diagram_type": 31,
         "name": "scene models",
         "description": [
-                ""
+                "This diagram shows the different fractal models that are implemented"
         ],
         "list_order": 32768,
         "parent_name": "Modules",
@@ -101,7 +102,7 @@
         "type": "Component", "main_type": 121,
         "name": "scene_model",
         "description": [
-                ""
+                "Calculates a selected fractal (including a time dimension)."
         ],
         "x_order": -1362455350,
         "y_order": -902241713,
@@ -118,7 +119,8 @@
         "type": "Component", "main_type": 121,
         "name": "animaion_renderer",
         "description": [
-                ""
+                "Takes a list of paths (consisting of draw directives) and converts these to ",
+                "\"animated SVG\" where each path shows a different point in time."
         ],
         "x_order": 836092384,
         "y_order": -1090831047,
@@ -155,7 +157,7 @@
         "type": "Class", "main_type": 125,
         "name": "main",
         "description": [
-                ""
+                "evaluates command line parameters and selects a fractal to generate"
         ],
         "x_order": -1416291771,
         "y_order": -1181097400,
@@ -172,7 +174,7 @@
         "type": "Package", "main_type": 124,
         "name": "geometry",
         "description": [
-                ""
+                "A data strcuture to state a path consisting of drawing directives"
         ],
         "x_order": 1089994203,
         "y_order": 14874059,
@@ -189,7 +191,8 @@
         "type": "Component", "main_type": 121,
         "name": "fernfarmforfun",
         "description": [
-                ""
+                "This program calculates a set of fractals (and possibly other models) and ",
+                "visualizes these as animated SVG graphics."
         ],
         "x_order": -1783932012,
         "y_order": -1715130181,
@@ -206,7 +209,7 @@
         "type": "Class", "main_type": 125,
         "name": "feigenbaum",
         "description": [
-                ""
+                "The feigenbaum fractal, the recursion depth is mapped to the time dimension."
         ],
         "x_order": -1535419870,
         "y_order": -902241713,
@@ -223,7 +226,7 @@
         "type": "Class", "main_type": 125,
         "name": "leaf of fern",
         "description": [
-                ""
+                "a fern leaf, swinging"
         ],
         "x_order": -283467609,
         "y_order": -902241713,
