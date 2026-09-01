@@ -47,7 +47,7 @@ fn leaf_of_fern(
             angle + bend + tension,
             bend_left,
             tension,
-            0.92 * seg_len,
+            0.91 * seg_len,
             &mut out_segs[1..fwd_space],
         );
     }
